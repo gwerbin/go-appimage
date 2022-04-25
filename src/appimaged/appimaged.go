@@ -44,6 +44,7 @@ var cleanPtr = flag.Bool("c", true, "Clean pre-existing desktop files")
 
 var quietPtr = flag.Bool("q", false, "Do not send desktop notifications")
 var noZeroconfPtr = flag.Bool("nz", false, "Do not announce this service on the network using Zeroconf")
+var noSystemdPtr = flag.Bool("no-systemd", false, "Do not check for or attempt to use Systemd integration.")
 
 var integrationChannel chan *AppImage = make(chan *AppImage, 50)
 
@@ -129,7 +130,11 @@ func main() {
 
 	checkPrerequisites()
 
-	setupToRunThroughSystemd()
+	if ! *noSystemdPtr {
+		setupToRunThroughSystemd()
+	} else {
+		log.Println("Skipping all systemd service integration.")
+	}
 	// fmt.Println("Setting as autostart...")
 	// setMyselfAsAutostart()
 
